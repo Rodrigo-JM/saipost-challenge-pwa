@@ -1,16 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  Tile,
-  Checkbox,
-  Modal,
-  TextInput,
-  ComposedModal,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-  Button,
-  InlineLoading,
-} from "carbon-components-react";
+import { ComposedModal, Button } from "carbon-components-react";
 import * as todosService from "../services/todos";
 import { useToasts } from "react-toast-notifications";
 import LottiePlayer from "./LottiePlayer";
@@ -22,7 +11,7 @@ export default function FillTasks({ setPendingTasksList, pendingTasksList }) {
   const [error, setError] = useState("");
   const { addToast } = useToasts();
 
-  const handleFillTasks = (data) => {
+  const handleFillTasks = () => {
     setLoader(true);
     setError("");
     todosService
@@ -38,6 +27,10 @@ export default function FillTasks({ setPendingTasksList, pendingTasksList }) {
         setError(error.response.data.message);
       });
   };
+
+  useEffect(() => {
+    if (openModal) handleFillTasks();
+  }, [openModal]);
 
   return (
     <>
@@ -57,28 +50,21 @@ export default function FillTasks({ setPendingTasksList, pendingTasksList }) {
           fontSize: "1.3em",
         }}
       >
-        {loader ? (
-          <LottiePlayer
-            boxSize={{ height: "50%", width: "50%" }}
-            animationData={taskCreator}
-          />
-        ) : (
-          <div style={{ height: "100%", width: "100%" }}>
-            <ModalHeader>Criar Grupo de Tarefas</ModalHeader>
-            <ModalBody>
-              <p style={{ marginBottom: "1rem" }}>
-                Adicione 3 novas tarefas pendentes para passar o tempo
-              </p>
-            </ModalBody>
-            <ModalFooter>
-              {!loader && (
-                <Button kind="primary" onClick={() => handleFillTasks()}>
-                  Confirmar
-                </Button>
-              )}
-            </ModalFooter>
-          </div>
-        )}
+        <LottiePlayer
+          boxSize={{ height: "50%", width: "50%" }}
+          animationData={taskCreator}
+        />
+        <p
+          style={{
+            fontSize: "1.3em",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            paddingBottom: "1em",
+          }}
+        >
+          Adicionando grupo de tarefas para passar o tempo
+        </p>
       </ComposedModal>
     </>
   );

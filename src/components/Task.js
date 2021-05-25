@@ -1,104 +1,61 @@
-import React, { useEffect, useState } from "react";
-import {
-  Tile,
-  Checkbox,
-  Modal,
-  TextInput,
-  ComposedModal,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-  Button,
-  InlineLoading,
-} from "carbon-components-react";
-import { PENDING_TASK_STATUS, COMPLETED_TASK_STATUS } from "../App";
+import React from "react";
+import { Tile, Checkbox, InlineLoading } from "carbon-components-react";
+import { COMPLETED_TASK_STATUS } from "../App";
 
-export default function Task({
+function Task({
   id,
   name,
   description,
-  statusHandler,
-  index,
   email,
   status,
   handleToggleCompletion,
+  handleToggleReturn,
   loading,
 }) {
-  const [openModal, setModalOpen] = useState(false);
-  const [password, setPassword] = useState("");
-
   const isLoading = loading == id;
 
-  useEffect(() => {
-    if (openModal === false) setPassword("");
-  }, [openModal]);
-
-  const handleSubmitReturn = (password) => {
-    handleToggleCompletion(id, PENDING_TASK_STATUS, password);
-    setModalOpen(false);
-  };
-
   return (
-    <>
-      <ComposedModal
-        open={openModal}
-        size="lg"
-        onClose={() => setModalOpen(false)}
+    <Tile style={{ width: "100%", margin: "1px" }}>
+      <p
+        style={{
+          fontSize: "21px",
+          height: "30px",
+          overflow: "hidden",
+          textOverflow: "ellipsis",
+        }}
       >
-        <ModalHeader>Autorização</ModalHeader>
-        <ModalBody hasForm>
-          <TextInput
-            data-modal-primary-focus
-            value={password}
-            id={`pass-${id}`}
-            labelText="Chave de supervisor"
-            placeholder="Chave de supervisor"
-            onChange={(e) => setPassword(e.target.value)}
+        {description}
+      </p>
+      <fieldset className="bx--fieldset">
+        <legend className="bx--label">Status</legend>
+        {isLoading ? (
+          <InlineLoading description="Loading..." />
+        ) : (
+          <Checkbox
+            labelText="Completed"
+            disabled={loading !== 0}
+            checked={!!status}
+            onClick={() =>
+              status === COMPLETED_TASK_STATUS
+                ? handleToggleReturn(id)
+                : handleToggleCompletion(id, COMPLETED_TASK_STATUS)
+            }
+            id={`checkbox-${id}`}
           />
-        </ModalBody>
-        <ModalFooter>
-          <Button kind="primary" onClick={() => handleSubmitReturn(password)}>
-            Confirmar
-          </Button>
-        </ModalFooter>
-      </ComposedModal>
-      {/* <Modal
-        
-      >
-        <TextInput
-          
-        />
-      </Modal> */}
-      <Tile style={{ width: "100%", margin: "1px" }}>
+        )}
         <p
           style={{
-            fontSize: "21px",
-            height: "30px",
-            overflow: "hidden",
-            textOverflow: "ellipsis",
+            fontSize: "0.8em",
+            textTransform: "uppercase",
+            letterSpacing: "1.2px",
+            fontStyle: "italic",
           }}
         >
-          {description}
+          Res: {name} - E-mail: {email}
         </p>
-        <fieldset className="bx--fieldset">
-          <legend className="bx--label">Status</legend>
-          {isLoading ? (
-            <InlineLoading description="Loading..." />
-          ) : (
-            <Checkbox
-              labelText="Completed"
-              disabled={loading !== 0}
-              checked={!!status}
-              onClick={() =>
-                status === COMPLETED_TASK_STATUS
-                  ? setModalOpen(true)
-                  : handleToggleCompletion(id, COMPLETED_TASK_STATUS)
-              }
-              id={`checkbox-${id}`}
-            />
-          )}
-        </fieldset>
-      </Tile>
-    </>
+      </fieldset>
+    </Tile>
   );
 }
+
+export default Task;

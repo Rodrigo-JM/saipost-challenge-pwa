@@ -1,8 +1,5 @@
 import React, { useEffect, useState } from "react";
 import {
-  Tile,
-  Checkbox,
-  Modal,
   TextInput,
   ComposedModal,
   ModalHeader,
@@ -39,6 +36,14 @@ export default function AddNewTask({ setPendingTasksList, pendingTasksList }) {
         setError(error.response.data.message);
       });
   };
+
+  useEffect(() => {
+    if (!openModal) {
+      setName("");
+      setEmail("");
+      setDescription("");
+    }
+  }, [openModal]);
 
   return (
     <>

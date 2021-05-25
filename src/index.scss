@@ -14,11 +14,13 @@ body {
 }
 
 .bx--fieldset {
-  margin-bottom: "0em";
+  margin-bottom: 0rem;
 }
-
-.bx--modal-container--sm {
-  display: flex;
+.bx--form-item.bx--checkbox-wrapper:last-of-type {
+  margin-bottom: 0rem;
+}
+.bx--label + .bx--form-item.bx--checkbox-wrapper {
+  margin-top: 0rem;
 }
 
 code {

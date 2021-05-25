@@ -3,7 +3,7 @@ import { Tile } from "carbon-components-react";
 import LottiePlayer from "./LottiePlayer";
 import { calendarLoader } from "../lotties/calendarLoader";
 
-export default function TaskList({ children, title, loading }) {
+function TaskList({ children, title, loading }) {
   return (
     <Tile
       style={{
@@ -49,3 +49,5 @@ export default function TaskList({ children, title, loading }) {
     </Tile>
   );
 }
+
+export default TaskList;
