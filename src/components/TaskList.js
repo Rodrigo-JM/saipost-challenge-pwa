@@ -13,7 +13,7 @@ export default function TaskList({ children, title }) {
         justifyContent: "space-between",
         paddingTop: "0.5px",
         border: "1px dotted #f3f3f3",
-        borderRadius: "5px 5px 0 0;",
+        borderRadius: "5px 5px 0 0",
       }}
     >
       <p
