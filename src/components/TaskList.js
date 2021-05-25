@@ -1,7 +1,9 @@
 import React from "react";
 import { Tile } from "carbon-components-react";
+import LottiePlayer from "./LottiePlayer";
+import { calendarLoader } from "../lotties/calendarLoader";
 
-export default function TaskList({ children, title }) {
+export default function TaskList({ children, title, loading }) {
   return (
     <Tile
       style={{
@@ -35,7 +37,14 @@ export default function TaskList({ children, title }) {
           padding: "0px 0.5px",
         }}
       >
-        {children}
+        {loading ? (
+          <LottiePlayer
+            boxSize={{ height: "50%", width: "50%" }}
+            animationData={calendarLoader}
+          />
+        ) : (
+          children
+        )}
       </Tile>
     </Tile>
   );

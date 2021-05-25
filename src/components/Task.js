@@ -27,7 +27,7 @@ export default function Task({
   const [openModal, setModalOpen] = useState(false);
   const [password, setPassword] = useState("");
 
-  const isLoading = loading.includes(id);
+  const isLoading = loading == id;
 
   useEffect(() => {
     if (openModal === false) setPassword("");
@@ -87,6 +87,7 @@ export default function Task({
           ) : (
             <Checkbox
               labelText="Completed"
+              disabled={loading !== 0}
               checked={!!status}
               onClick={() =>
                 status === COMPLETED_TASK_STATUS

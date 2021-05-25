@@ -5,6 +5,7 @@ import * as todosService from "./services/todos";
 import TaskList from "./components/TaskList";
 import Task from "./components/Task";
 import AddNewTask from "./components/AddNewTask";
+import FillTasks from "./components/FillTasks";
 
 export const PENDING_TASK_STATUS = 0;
 export const COMPLETED_TASK_STATUS = 1;
@@ -19,21 +20,19 @@ function App() {
   const [error, setError] = useState("");
   const [pendingTasksList, setPendingTasksList] = useState([]);
   const [completedTasksList, setCompletedTasksList] = useState([]);
-  const [currentTaskLoading, toggleCurrentTaskLoading] = useState([]);
+  const [currentTaskLoading, toggleCurrentTaskLoading] = useState(0);
 
   const { addToast } = useToasts();
 
   const handleToggleCompletion = (todoId, status, password) => {
-    if (!currentTaskLoading.includes(todoId))
-      toggleCurrentTaskLoading([...currentTaskLoading, todoId]);
+    toggleCurrentTaskLoading(todoId);
+    setError("");
     todosService
       .updateTask({ status, todoId, password })
       .then((res) => {
         const todo = res.data;
 
-        toggleCurrentTaskLoading(
-          currentTaskLoading.filter((t) => t !== todo.id)
-        );
+        toggleCurrentTaskLoading(0);
 
         if (status === COMPLETED_TASK_STATUS) {
           setCompletedTasksList([todo, ...completedTasksList]);
@@ -52,9 +51,7 @@ function App() {
       })
       .catch((error) => {
         setError(error.response.data.message);
-        toggleCurrentTaskLoading(
-          currentTaskLoading.filter((t) => t.id !== todoId)
-        );
+        toggleCurrentTaskLoading(0);
       });
   };
 
@@ -124,7 +121,11 @@ function App() {
             justifyContent: "space-evenly",
           }}
         >
-          <TaskList id="pendingTasksList" title="Tarefas Pendentes 📋">
+          <TaskList
+            id="pendingTasksList"
+            title="Tarefas Pendentes 📋"
+            loading={allTasksState.loading}
+          >
             {pendingTasksList.map((task) => {
               return (
                 <Task
@@ -136,11 +137,21 @@ function App() {
               );
             })}
           </TaskList>
-          <AddNewTask
-            setPendingTasksList={setPendingTasksList}
-            pendingTasksList={pendingTasksList}
-          />
-          <TaskList id="completedTasksList" title="Tarefas Completas ✅">
+          <div style={{ display: "flex", flexDirection: "column" }}>
+            <AddNewTask
+              setPendingTasksList={setPendingTasksList}
+              pendingTasksList={pendingTasksList}
+            />
+            <FillTasks
+              setPendingTasksList={setPendingTasksList}
+              pendingTasksList={pendingTasksList}
+            />
+          </div>
+          <TaskList
+            id="completedTasksList"
+            title="Tarefas Completas ✅"
+            loading={allTasksState.loading}
+          >
             {completedTasksList.map((task) => {
               return (
                 <Task
